@@ -1,5 +1,61 @@
-//Create dots
-const createDots = () => {
+
+// *** COLOR PICKER
+function getColorClassName(id){
+	
+	//Color Catalog Object
+	const colorCatalog = [
+		{
+			id: 1,
+			color: 'blue',
+			className: 'blue-target-container-over',
+		},
+		{
+			id: 2,
+			color: 'red',
+			className: 'red-target-container-over',
+		},
+		{
+			id: 3,
+			color: 'green',
+			className: 'green-target-container-over',
+		},
+		{
+			id: 4,
+			color: 'black',
+			className: 'black-target-container-over',
+		},
+	];
+
+	let colorNum;
+
+	if(id.indexOf('blue') >= 0){
+		colorNum = 1;
+	}
+	else if(id.indexOf('red') >= 0){
+		colorNum = 2;
+	}
+	else if(id.indexOf('green') >= 0){
+		colorNum = 3;
+	}
+	else{ //black
+		colorNum = 4;
+	}
+
+	let colorObj = colorCatalog.filter(colorObj =>  colorObj.id === colorNum);
+
+	if(colorObj.length > 0){
+		return colorObj[0].className;
+	}
+	else{
+		return '';
+	}
+}
+
+
+// *** CREATE DOTS
+function createDots(){
+
+	// Dots catalog
 	const dotsInfo = [
 		{
 			id: 'blue-dot',
@@ -42,47 +98,89 @@ const createDots = () => {
 
 		counter++;
 	});
-
-	//Event handlers
-	const dragStart = e => {
-		e.dataTransfer.setData('text/plain', e.target.id);
-	};
-
-	const dropped = e => {
-		cancel(e);
-
-		let id = e.dataTransfer.getData('text/plain'); //blue-dot
-
-		if(e.target.id.indexOf(id) >= 0){
-			e.target.appendChild(document.querySelector('#' + id));
-		}
-	};
-
-	const cancel = e => {
-		if(e.preventDefault) 
-			e.preventDefault();
-		return false;
-	};
+}
 
 
-	//Attach events
-	//Drag and Drop Source Areas 
-	let dots = document.querySelectorAll('.dot-img');
+// ** EVENT HANDLERS
+// Source areas
+const dragStart = e => {
+	e.dataTransfer.setData('text/plain', e.target.id);
+};
+
+// Target areas
+const dragOver = e => {
+	cancel(e);
+	
+	mouseOver(e);
+};
+
+const dragLeave = e => {
+	cancel(e);
+
+	mouseLeave(e);
+};
+
+const dropped = e => {
+	cancel(e);
+
+	let sourceId = e.dataTransfer.getData('text/plain'); //blue-dot
+	let colorClassName = getColorClassName(e.target.id);
+
+	e.target.classList.remove('target-container-over', colorClassName);
+
+	if(e.target.id.indexOf(sourceId) >= 0){
+		e.target.appendChild(document.querySelector('#' + sourceId));
+		e.target.removeEventListener('mouseover', mouseOver, false);
+		e.target.removeEventListener('mouseleave', mouseLeave, false);
+	}
+};
+
+const cancel = e => {
+	if(e.preventDefault) 
+		e.preventDefault();
+	return false;
+};
+
+const mouseOver = e => {
+	if(!e.target.hasChildNodes()){
+		let colorClassName = getColorClassName(e.target.id);
+		e.target.classList.add('target-container-over' , colorClassName);
+	}
+};
+
+const mouseLeave = e => {
+	let colorClassName = getColorClassName(e.target.id);
+	e.target.classList.remove('target-container-over', colorClassName);
+};
+
+
+// *** ATTACH EVENTS
+// Source areas
+function attachSourceEvents(dots){
 	dots.forEach(dot => {
 		dot.addEventListener('dragstart', dragStart, false);
 	});
+}
 
-	//Drag and Drop Target Areas
-	let dotTargets = document.querySelectorAll('.target-container');
-	dotTargets.forEach(target =>{
+// Target areas 
+function attachTargetEvents(targets) {
+	targets.forEach(target =>{
 		target.addEventListener('drop', dropped, false);
 		target.addEventListener('dragenter', cancel, false);
-		target.addEventListener('dragover', cancel, false);
+		target.addEventListener('dragover', dragOver, false);
+		target.addEventListener('dragleave', dragLeave, false);
 	});
 }
-createDots();
+
+function attachMouseEvents(targets){
+	targets.forEach(target =>{
+		target.addEventListener('mouseover', mouseOver, false);
+		target.addEventListener('mouseleave', mouseLeave, false);
+	});	
+}
 
 
+// *** RESET BUTTON
 const reset = e => {
 	let dots = document.querySelectorAll('.dot-img');
 
@@ -90,9 +188,27 @@ const reset = e => {
 		dot.parentElement.removeChild(dot);
 	});
 
-	createDots();
+	init();
 }
 
-//Button
 let resetButton = document.querySelector('#reset-btn');
 resetButton.addEventListener('click', reset, false);
+
+
+// *** INIT
+function init(){
+	createDots();
+
+	let dots = document.querySelectorAll('.dot-img');
+	let targets = document.querySelectorAll('.target-container');
+	
+	attachSourceEvents(dots);
+	attachTargetEvents(targets);
+	attachMouseEvents(targets);
+}
+init();
+
+
+
+
+
