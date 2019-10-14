@@ -74,30 +74,43 @@ button:focus{
 }
 	.target-container{
 		position: absolute;
+		border-radius: 3em;
+		cursor: pointer;
+	}
+	.target-container-over{
+		opacity: 0.2;
 	}
 	#blue-dot-target-container{
-		/*background-color: blue;*/
 		top: 48px;
     	left: 276px;
 	}
+	.blue-target-container-over{
+		background-color: #164880;
+	}
 	#red-dot-target-container{
-		/*background-color: red;*/
+		/*background-color: #c52c47;*/
 		top: 72px;
     	left: 456px;
 	}
+	.red-target-container-over{
+		background-color: #c52c47;
+	}
 	#green-dot-target-container{
-		/*background-color: green;*/
+		/*background-color: #929a38;*/
 		top: 335px;
     	left: 144px;
 	}
+	.green-target-container-over{
+		background-color: #929a38;
+	}
 	#black-dot-target-container{
-		/*background-color: black;*/
 	    top: 192px;
 		left: 47px;
-
+	}
+	.black-target-container-over{
+		background-color: #000;
 	}
 	#black-2-dot-target-container{
-		/*background-color: gray;*/
 	    top: 288px;
 		left: 420px;
 	}
