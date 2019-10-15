@@ -78,7 +78,7 @@ function createDots(){
 			src: 'img/ia-logo-dot-black.png'
 		},
 		{
-			id: 'black-2-dot',
+			id: 'black-dot',
 			elClass: 'dot-img',
 			src: 'img/ia-logo-dot-black.png'
 		}
@@ -100,6 +100,13 @@ function createDots(){
 	});
 }
 
+function resetTargetAreas(){
+	let dots = document.querySelectorAll('.dot-img');
+
+	dots.forEach(dot => {
+		dot.parentElement.removeChild(dot);
+	});
+}
 
 // ** EVENT HANDLERS
 // Source areas
@@ -125,6 +132,7 @@ const dropped = e => {
 
 	let sourceId = e.dataTransfer.getData('text/plain'); //blue-dot
 	let colorClassName = getColorClassName(e.target.id);
+	let dotsAssembledNum = 0;
 
 	e.target.classList.remove('target-container-over', colorClassName);
 
@@ -132,6 +140,17 @@ const dropped = e => {
 		e.target.appendChild(document.querySelector('#' + sourceId));
 		e.target.removeEventListener('mouseover', mouseOver, false);
 		e.target.removeEventListener('mouseleave', mouseLeave, false);
+
+
+		let dotsAssembledStr = sessionStorage.getItem('dotsAssembled');
+		dotsAssembledNum = parseInt(dotsAssembledStr, 10) + 1;
+		
+		sessionStorage.setItem('dotsAssembled', dotsAssembledNum.toString());
+		
+	}
+
+	if(dotsAssembledNum === 5){
+		openCongratulationsModal();
 	}
 };
 
@@ -182,12 +201,7 @@ function attachMouseEvents(targets){
 
 // *** RESET BUTTON
 const reset = e => {
-	let dots = document.querySelectorAll('.dot-img');
-
-	dots.forEach(dot => {
-		dot.parentElement.removeChild(dot);
-	});
-
+	resetTargetAreas();
 	init();
 }
 
@@ -195,8 +209,15 @@ let resetButton = document.querySelector('#reset-btn');
 resetButton.addEventListener('click', reset, false);
 
 
+// *** CONGRATULATIONS WINDOW
+function openCongratulationsModal() {
+		let modal = document.querySelector('.modal');
+		modal.style.display = "block";
+		startConfetti();
+}
+
 // *** INIT
-function init(){
+const init = () => {
 	createDots();
 
 	let dots = document.querySelectorAll('.dot-img');
@@ -205,6 +226,8 @@ function init(){
 	attachSourceEvents(dots);
 	attachTargetEvents(targets);
 	attachMouseEvents(targets);
+
+	sessionStorage.setItem('dotsAssembled', '0');
 }
 init();
 
