@@ -7,6 +7,7 @@
 body{
 	font-family: 'Raleway', sans-serif;
 	max-width: 600px;
+	margin: 0 auto;
 }
 
 h1{
@@ -78,7 +79,7 @@ button:focus{
 		cursor: pointer;
 	}
 	.target-container-over{
-		opacity: 0.2;
+		opacity: 0.5;
 	}
 	#blue-dot-target-container{
 		top: 48px;
@@ -110,7 +111,7 @@ button:focus{
 	.black-target-container-over{
 		background-color: #000;
 	}
-	#black-2-dot-target-container{
+	#black-dot-2-target-container{
 	    top: 288px;
 		left: 420px;
 	}
