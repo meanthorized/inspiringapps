@@ -8,18 +8,18 @@
   min-height: 100vh;
 }
 
-[class|="confetti"] {
+[class|="confetti"].confetti {
   position: absolute;
 }
 
-.red {
+.confetti.red {
   background-color: #E94A3F;
 }
 
-.yellow {
+.confetti.yellow {
   background-color: #FAA040;
 }
 
-.blue {
+.confetti.blue {
   background-color: #5FC9F5;
 }
