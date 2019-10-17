@@ -1,21 +1,59 @@
+export let Modal = (function(){
+	let modalElement;
+	let closeButton;
+	let restartButton;
 
+	const validModal = (modalEl) => {
+		try{
+			if(typeof(modalEl) === 'undefined'){
+				throw new Error('No modal element provided.');
+			}
+			else if(typeof(modalEl) !== 'object' || typeof(modalEl) === null){
+				throw new Error('Please provide a valid modal element.');
+			}
+		}
+		catch(error){
+			console.log(error);
+			return false;
+		}
 
-const closeModal = e => {
-	let modal = document.querySelector('.modal');
-	modal.style.display = 'none';
-	cleanConfetti();
-};
+		return true;
+		
+	};
 
-const restart = e => {
-	closeButton.click();
-	resetButton.click();
-}
+	const setModalElement = (modalEl) => {
+		if(validModal(modalEl)){
+			modalElement = modalEl;
 
+			setCloseButton();
+			attachEventHandlers();
 
-let closeButton = document.querySelector('.close-btn');
-let restartButton = document.querySelector('#restart-btn');
-let modal = document.querySelector('.modal');
+			openModal();
+		}
+	}
 
-closeButton.addEventListener('click', closeModal);
-restartButton.addEventListener('click', restart);
-modal.addEventListener('click', closeModal);
+	const setCloseButton = () => {
+		closeButton = modalElement.querySelector('.close-btn');
+		restartButton = modalElement.querySelector('#restart-btn');
+	};
+
+	const openModal = () =>{
+		modalElement.style.display = 'block';
+	};
+
+	const closeModal = () => {
+		modalElement.style.display = 'none';
+	};
+
+	const attachEventHandlers = () =>{
+		closeButton.addEventListener('click', closeModal);
+		restartButton.addEventListener('click', closeModal);
+		modalElement.addEventListener('click', closeModal);
+	};
+
+	
+	return{
+		openModal: setModalElement
+	};
+
+}());
