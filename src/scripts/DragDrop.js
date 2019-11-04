@@ -83,6 +83,7 @@ export let DragAndDrop = (function(){
 
 		//Get the dot image id (The source element)
 		let sourceId = e.dataTransfer.getData('text/plain');
+		let dotElement = document.querySelector('#' + sourceId);
 		let dotsAssembledNum = 0;
 		let allowDrop = false;
 
@@ -100,14 +101,21 @@ export let DragAndDrop = (function(){
 				sessionStorage.setItem('dotsAssembled', '0');
 			}
 
-			//Append the dot image
-			e.target.appendChild(document.querySelector('#' + sourceId));
-
 			//Update dots assembled session variable
-			let dotsAssembledStr = sessionStorage.getItem('dotsAssembled');
-			dotsAssembledNum = parseInt(dotsAssembledStr, 10) + 1;
-			sessionStorage.setItem('dotsAssembled', dotsAssembledNum.toString());
 			
+			//Check first if the parent element is already "drop area" (a dot slot within the logo)
+			//(for the special case of black dots)
+			//Get the parent element
+			let parentElement = dotElement.parentElement;
+			let parentElementClasses = parentElement.classList;
+			if(!parentElementClasses.contains('target-container')){
+				let dotsAssembledStr = sessionStorage.getItem('dotsAssembled');
+				dotsAssembledNum = parseInt(dotsAssembledStr, 10) + 1;
+				sessionStorage.setItem('dotsAssembled', dotsAssembledNum.toString());
+			}
+
+			//Append the dot image
+			e.target.appendChild(dotElement);
 		}
 
 		//If the logo is completely assembled, congratulate the user
